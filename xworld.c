@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) {
                 double val = getNoiseValue(np, (double)(i + x) * step, (double)(j + y) * step);
                 if(val < -0.4) {
                     XSetForeground(display, g, blue.pixel);
-                } else if(val < -0.45) {
+                } else if(val < -0.35) {
                     XSetForeground(display, g, yellow.pixel);
                 } else if(val < 0.5) {
                     XSetForeground(display, g, green.pixel);
