@@ -27,8 +27,4 @@ typedef struct NoiseParams {
 NoiseParams* defaultNoiseParams(void);
 double getNoiseValue(NoiseParams* np, double x, double y);
 
-static double generateCoherentNoise(double x, double y);
-static double generateNoise(int x, int y);
-static double interpolate(double v1, double v2, double a);
-
 #endif 

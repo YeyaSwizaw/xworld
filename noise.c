@@ -10,6 +10,10 @@ NoiseParams* defaultNoiseParams(void) {
     return ptr;
 }
 
+static double generateCoherentNoise(double x, double y);
+static double generateNoise(int x, int y);
+static double interpolate(double v1, double v2, double a);
+
 double getNoiseValue(NoiseParams* np, double x, double y) {
     double value = 0.0;
     double signal = 0.0;
@@ -62,12 +66,7 @@ static double interpolate(double v1, double v2, double a) {
     return ((1.0 - a) * v1) + (a * v2);
 }
 
-static double randRange(double min, double max) {
-    double range = max - min;
-    double div = RAND_MAX / range;
-    return min + (rand() / div);
-}
-
+/*
 int main(int argc, char* argv[]) {
     NoiseParams* np = defaultNoiseParams();
     double i, j, x, y, val;
@@ -94,3 +93,4 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
+*/
