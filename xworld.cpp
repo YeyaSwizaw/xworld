@@ -60,16 +60,13 @@ int main(int argc, char* argv[]) {
         ->setChunkSize(wa.width, wa.height);
 
     wg::RandomNoiseMap* heightmap = w->addRandomNoiseMap()
-        ->setSeed(std::to_string(rand()))
-        ->setGridSize(0.01);
+        ->setGridSize(0.01 * ((double)wa.height / (double)wa.width));
 
     wg::RandomNoiseMap* random = w->addRandomNoiseMap()
-        ->setSeed(std::to_string(rand()))
-        ->setGridSize(0.02);
+        ->setGridSize(0.04 * ((double)wa.height / (double)wa.width));
 
     wg::RandomNoiseMap* climate = w->addRandomNoiseMap()
-        ->setSeed(std::to_string(rand()))
-        ->setGridSize(0.02);
+        ->setGridSize(0.02 * ((double)wa.height / (double)wa.width));
 
 	// Water
 	w->addTileDefinition(blue.pixel)
