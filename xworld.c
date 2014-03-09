@@ -1,3 +1,4 @@
+#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
@@ -8,12 +9,34 @@
 #include "vroot.h"
 #include "noise.h"
 
+typedef struct Pair {
+    int x;
+    int y;
+} Pair;
+
 static int randRange(int min, int max);
+static void shuffle(Pair* array, size_t n);
+static void swap(Pair* a, Pair* b);
 
 static int randRange(int min, int max) {
     double scaled = (double)rand() / RAND_MAX;
     return (max - min + 1) * scaled + min;
 
+}
+
+static void shuffle(Pair* array, size_t n) {
+    int i, j;
+    for(i = n - 1; i > 0; i--) {
+        j = rand() % (i + 1);
+
+        swap(&array[i], &array[j]);
+    }
+}
+
+static void swap(Pair* a, Pair* b) {
+    Pair tmp = *a;
+    *a = *b;
+    *b = tmp;
 }
 
 int main(int argc, char* argv[]) {
@@ -27,6 +50,9 @@ int main(int argc, char* argv[]) {
     GC g;
     XColor blue, yellow, white, grey, dgreen, green;
     int i, j, x, y;
+    Pair* coords;
+    Pair p;
+    double val;
 
     srand(time(NULL));
 
@@ -58,13 +84,30 @@ int main(int argc, char* argv[]) {
     XParseColor(display, cmap, "#00FF00", &green);
     XAllocColor(display, cmap, &green);
 
-    x = rand();
-    y = rand();
+    coords = (Pair*)malloc(wa.width * wa.height * sizeof(Pair));
+
+    if(coords == NULL) {
+        printf("ERROR HERE\n");
+        return -1;
+    }
+
+    for(i = 0; i < wa.width; ++i) {
+        for(j = 0; j < wa.height; ++j) {
+            coords[(i * wa.height) + j].x = i;
+            coords[(i * wa.height) + j].y = j;
+        }
+    }
 
     while(1) {
+        x = rand();
+        y = rand();
+
+        shuffle(coords, wa.width * wa.height);
+
         for(i = 0; i < wa.width; i++) {
             for(j = 0; j < wa.height; j++) {
-                double val = getNoiseValue(np, (double)(i + x) * step, (double)(j + y) * step);
+                p = coords[(i * wa.height) + j];
+                val = getNoiseValue(np, (double)(p.x + x) * step, (double)(p.y + y) * step);
                 if(val < -0.4) {
                     XSetForeground(display, g, blue.pixel);
                 } else if(val < -0.35) {
@@ -77,12 +120,12 @@ int main(int argc, char* argv[]) {
                     XSetForeground(display, g, white.pixel);
                 }
 
-                XDrawPoint(display, root, g, i, j);
+                XDrawPoint(display, root, g, p.x, p.y);
             }
         }
 
         XFlush(display);
-        usleep(100);
+        usleep(3000000);
     }
 
     XCloseDisplay(display);
