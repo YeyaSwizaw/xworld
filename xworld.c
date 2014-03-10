@@ -101,6 +101,7 @@ int main(int argc, char* argv[]) {
     while(1) {
         x = rand();
         y = rand();
+        np->seed = rand();
 
         shuffle(coords, wa.width * wa.height);
 

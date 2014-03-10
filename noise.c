@@ -2,6 +2,7 @@
 
 NoiseParams* defaultNoiseParams(void) {
     NoiseParams* ptr = (NoiseParams*)malloc(sizeof(NoiseParams));
+    ptr->seed = YS_NOISE_SEED;
     ptr->octaves = YS_NOISE_OCTAVES;
     ptr->frequency = YS_NOISE_FREQUENCY;
     ptr->lacunarity = YS_NOISE_LACUNARITY;
@@ -10,8 +11,8 @@ NoiseParams* defaultNoiseParams(void) {
     return ptr;
 }
 
-static double generateCoherentNoise(double x, double y);
-static double generateNoise(int x, int y);
+static double generateCoherentNoise(double x, double y, int seed);
+static double generateNoise(int x, int y, int seed);
 static double interpolate(double v1, double v2, double a);
 
 double getNoiseValue(NoiseParams* np, double x, double y) {
@@ -19,12 +20,14 @@ double getNoiseValue(NoiseParams* np, double x, double y) {
     double signal = 0.0;
     double currPers = 1.0;
     int currOct = 0;
+    int seed;
 
     x *= np->frequency;
     y *= np->frequency;
 
     for(; currOct < np->octaves; currOct++) {
-        signal = generateCoherentNoise(x, y);
+        seed = (np->seed + currOct) & 0xffffffff;
+        signal = generateCoherentNoise(x, y, seed);
         value += signal * currPers;
 
         x *= np->lacunarity;
@@ -35,7 +38,7 @@ double getNoiseValue(NoiseParams* np, double x, double y) {
     return value;
 }
 
-static double generateCoherentNoise(double x, double y) {
+static double generateCoherentNoise(double x, double y, int seed) {
     int x0 = (x > 0.0 ? (int)x : (int)(x - 1));
     int x1 = x0 + 1;
 
@@ -45,10 +48,10 @@ static double generateCoherentNoise(double x, double y) {
     double xd = YS_SCURVE(x - (double)x0);
     double yd = YS_SCURVE(y - (double)y0);
 
-    double x0y0 = generateNoise(x0, y0);
-    double x1y0 = generateNoise(x1, y0);
-    double x0y1 = generateNoise(x0, y1);
-    double x1y1 = generateNoise(x1, y1);
+    double x0y0 = generateNoise(x0, y0, seed);
+    double x1y0 = generateNoise(x1, y0, seed);
+    double x0y1 = generateNoise(x0, y1, seed);
+    double x1y1 = generateNoise(x1, y1, seed);
 
     double v1 = interpolate(x0y0, x1y0, xd);
     double v2 = interpolate(x0y1, x1y1, xd);
@@ -56,8 +59,8 @@ static double generateCoherentNoise(double x, double y) {
     return interpolate(v1, v2, yd);
 }
 
-static double generateNoise(int x, int y) {
-    int n = (x * 157) + (y * 2633);
+static double generateNoise(int x, int y, int seed) {
+    int n = ((x * 157) + (y * 31337) + (seed * 2633)) & 0x7fffffff;
     n = (n << 13) ^ n;
     return (1.0 - ((n * (n * n * 15731 + 789221) + 1376312579) & 0x7fffffff) / 1073741824.0);    
 }

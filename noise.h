@@ -10,6 +10,7 @@
  * and from http://freespace.virgin.net/hugo.elias/models/m_perlin.htm
  */
 
+#define YS_NOISE_SEED 0
 #define YS_NOISE_OCTAVES 6
 #define YS_NOISE_FREQUENCY 1.0
 #define YS_NOISE_LACUNARITY 2.0
@@ -18,6 +19,7 @@
 #define YS_SCURVE(a) ((a) * (a) * (3.0 - 2.0 * (a)))
 
 typedef struct NoiseParams {
+    int seed;
     int octaves;
     double frequency;
     double lacunarity;
