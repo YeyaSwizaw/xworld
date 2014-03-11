@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<screensaver name="xworld" _label="XWorld">
+    <command arg="-root" />
+
+    <hgroup>
+        <vgroup>
+            <string id="blue"
+                    arg="-blue-hex %"
+                    _label="Blue colour: " />
+
+            <string id="green"
+                    arg="-green-hex %"
+                    _label="Green colour: " />
+
+            <string id="yellow"
+                    arg="-yellow-hex %"
+                    _label="Yellow colour: " />
+
+            <string id="white"
+                    arg="-white-hex %"
+                    _label="White colour: " />
+
+            <string id="grey"
+                    arg="-grey-hex %"
+                    _label="Grey colour: " />
+        </vgroup>
+
+        <vgroup>
+            <number id="delay"
+                    type="spinbutton"
+                    arg="-delay %"
+                    _label="Delay between worlds: "
+                    low="0"
+                    high="10000000"
+                    default="3000000" />
+
+            <string id="gridstep"
+                    arg="-grid-step %"
+                    _label="Noise grid step: " />
+        </vgroup>
+    </hgroup>
+
+    <xscreensaver-updater />
+
+    <_description>
+Displays random worlds generated using perlin noise.
+
+Created by Samuel Sleight, 2014.
+    </_description>
+</screensaver>
