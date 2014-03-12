@@ -21,6 +21,7 @@
 
 #define xworld_scurve(a) ((a) * (a) * (3.0 - 2.0 * (a)))
 
+/* Paramater struct for noise function */
 typedef struct xworld_noise_param {
     int seed;
     int octaves;
@@ -29,11 +30,13 @@ typedef struct xworld_noise_param {
     double persistence;
 } xworld_noise_param;
 
+/* coordinates */
 typedef struct xworld_coord {
     int x;
     int y;
 } xworld_coord;
 
+/* State object */
 typedef struct xworld_state {
     Display* dpy;
     Window wnd;
@@ -52,6 +55,7 @@ typedef struct xworld_state {
     int coord;
 } xworld_state;
 
+/* Function prototypes */
 static void xworld_shuffle(xworld_coord* array, size_t n);
 static void xworld_swap(xworld_coord* a, xworld_coord* b);
 static xworld_noise_param* xworld_default_noise(void);
@@ -65,6 +69,8 @@ static void xworld_reshape(Display* dpy, Window wnd, void* state, unsigned int w
 static Bool xworld_event (Display *dpy, Window wnd, void *state, XEvent *event);
 static void xworld_free(Display* dpy, Window wnd, void* state);
 
+/* Shuffle an array of coordinates 
+ * used to randomise the drawing of pixels */
 static void xworld_shuffle(xworld_coord* array, size_t n) {
     int i, j;
     for(i = n - 1; i > 0; --i) {
@@ -83,6 +89,7 @@ static void xworld_swap(xworld_coord* a, xworld_coord* b) {
  * Perlin noise
  */
 
+/* Get default noise parameters */
 static xworld_noise_param* xworld_default_noise(void) {
     xworld_noise_param* ptr = (xworld_noise_param*)calloc(1, sizeof(xworld_noise_param));
     ptr->seed = XWORLD_DEFAULT_NOISE_SEED;
@@ -93,6 +100,7 @@ static xworld_noise_param* xworld_default_noise(void) {
     return ptr;
 }
 
+/* Get the noise value at a location with the passed params */
 static double xworld_get_noise_value(xworld_noise_param* np, double x, double y) {
     int seed;
     int oct = 0;
@@ -148,6 +156,7 @@ static double xworld_interpolate(double v1, double v2, double a) {
 /*
  * xworld 
  */
+/* Default resource values */
 static const char *xworld_defaults[] = { 
     ".background:   #000000",
     ".foreground:   #FFFFFF",
@@ -162,6 +171,7 @@ static const char *xworld_defaults[] = {
     0
 };
 
+/* Command line options */
 static XrmOptionDescRec xworld_options[] = { 
     { "-pixels-per-loop",   ".ppl",         XrmoptionSepArg,    0 },
     { "-delay",             ".delay",       XrmoptionSepArg,    0 },
@@ -174,6 +184,7 @@ static XrmOptionDescRec xworld_options[] = {
     { 0, 0, 0, 0 } 
 };
 
+/* Initialise the state */
 static void* xworld_init(Display* dpy, Window wnd) {
     xworld_state* st = (xworld_state*)calloc(1, sizeof(*st));
     Colormap cmap;
@@ -234,6 +245,7 @@ static unsigned long xworld_draw(Display* dpy, Window wnd, void* state) {
     int threshold = st->wa.width * st->wa.height;
     int i;
 
+    /* World is rendered - reset and wait */
     if(st->coord >= st->wa.width * st->wa.height) {
         st->coord = 0;
         st->np->seed = random();
@@ -242,6 +254,7 @@ static unsigned long xworld_draw(Display* dpy, Window wnd, void* state) {
         return st->delay;
     }
 
+    /* Draw pixels */
     for(i = 0; i < st->ppl; ++i) {
         c = st->coords[st->coord];
         val = xworld_get_noise_value(st->np, c.x * st->step, c.y * st->step);
