@@ -42,8 +42,9 @@ typedef struct xworld_state {
     Window wnd;
     XWindowAttributes wa;
 
-    GC g;
+    GC gc;
     XColor water, sand, peak, mtn, grass;
+    double w, s, m, g;
 
     xworld_noise_param* np;
     xworld_coord* coords;
@@ -163,11 +164,17 @@ static const char *xworld_defaults[] = {
     "*ppl:          100",
     "*delay:        3000000",
     "*gridstep:     0.0075",
+
     "*watercol:     #0000FF",
     "*sandcol:      #FFCC00",
     "*peakcol:      #EEEEEE",
     "*mtncol:       #AAAAAA",
     "*grasscol:     #00FF00",
+
+    "*watermax:     30",
+    "*sandmax:      35",
+    "*grassmax:     70",
+    "*mtnmax:       85",
     0
 };
 
@@ -181,6 +188,10 @@ static XrmOptionDescRec xworld_options[] = {
     { "-peak-col",          ".peakhex",     XrmoptionSepArg,    0 },
     { "-mtn-col",           ".mtnhex",      XrmoptionSepArg,    0 },
     { "-grass-col",         ".grasshex",    XrmoptionSepArg,    0 },
+    { "-water-max",         ".watermax",    XrmoptionSepArg,    0 },
+    { "-sand-max",          ".sandmax",     XrmoptionSepArg,    0 },
+    { "-mtn-max",           ".mtnmax",      XrmoptionSepArg,    0 },
+    { "-grass-max",         ".grassmax",    XrmoptionSepArg,    0 },
     { 0, 0, 0, 0 } 
 };
 
@@ -199,7 +210,7 @@ static void* xworld_init(Display* dpy, Window wnd) {
     screen = DefaultScreen(st->dpy);
     cmap = XDefaultColormap(st->dpy, screen);
 
-    st->g = XCreateGC(st->dpy, st->wnd, screen, NULL);
+    st->gc = XCreateGC(st->dpy, st->wnd, screen, NULL);
 
     XParseColor(st->dpy, cmap, 
             get_string_resource(st->dpy, "watercol", "String"), &(st->water));
@@ -220,6 +231,11 @@ static void* xworld_init(Display* dpy, Window wnd) {
     XParseColor(st->dpy, cmap, 
             get_string_resource(st->dpy, "grasscol", "String"), &(st->grass));
     XAllocColor(st->dpy, cmap, &(st->grass));
+
+    st->w = (get_float_resource(st->dpy, "watermax", "Float") / 50.0) - 1;
+    st->s = (get_float_resource(st->dpy, "sandmax", "Float") / 50.0) - 1;
+    st->g = (get_float_resource(st->dpy, "grassmax", "Float") / 50.0) - 1;
+    st->m = (get_float_resource(st->dpy, "mtnmax", "Float") / 50.0) - 1;
 
     st->ppl = get_integer_resource(st->dpy, "ppl", "Integer");
     st->delay = get_integer_resource(st->dpy, "delay", "Integer");
@@ -260,19 +276,19 @@ static unsigned long xworld_draw(Display* dpy, Window wnd, void* state) {
         val = xworld_get_noise_value(st->np, c.x * st->step, c.y * st->step);
         st->coord++;
 
-        if(val < -0.4) {
-            XSetForeground(st->dpy, st->g, st->water.pixel);
-        } else if(val < -0.35) {
-            XSetForeground(st->dpy, st->g, st->sand.pixel);
-        } else if(val < 0.5) {
-            XSetForeground(st->dpy, st->g, st->grass.pixel);
-        } else if(val < 0.8) {
-            XSetForeground(st->dpy, st->g, st->mtn.pixel);
+        if(val < st->w) {
+            XSetForeground(st->dpy, st->gc, st->water.pixel);
+        } else if(val < st->s) {
+            XSetForeground(st->dpy, st->gc, st->sand.pixel);
+        } else if(val < st->g) {
+            XSetForeground(st->dpy, st->gc, st->grass.pixel);
+        } else if(val < st->m) {
+            XSetForeground(st->dpy, st->gc, st->mtn.pixel);
         } else {
-            XSetForeground(st->dpy, st->g, st->peak.pixel);
+            XSetForeground(st->dpy, st->gc, st->peak.pixel);
         }
 
-        XDrawPoint(st->dpy, st->wnd, st->g, c.x, c.y);
+        XDrawPoint(st->dpy, st->wnd, st->gc, c.x, c.y);
 
         if(st->coord >= threshold) {
             break;
@@ -292,7 +308,7 @@ static Bool xworld_event(Display* dpy, Window wnd, void* state, XEvent* event) {
 
 static void xworld_free(Display* dpy, Window wnd, void* state) {
     xworld_state* st = (xworld_state*)state;
-    XFreeGC(st->dpy, st->g);
+    XFreeGC(st->dpy, st->gc);
     free(st->np);
     free(st->coords);
     free(st);

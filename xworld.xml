@@ -22,6 +22,36 @@
                     _label="Peak colour: " />
         </vgroup>
         <vgroup>
+            <number id="watermax"
+                    type="spinbutton"
+                    arg="-water-max %"
+                    _label="Water threshold: "
+                    low="0"
+                    high="100"
+                    default="30" />
+            <number id="sandmax"
+                    type="spinbutton"
+                    arg="-sand-max %"
+                    _label="Sand threshold: "
+                    low="0"
+                    high="100"
+                    default="35" />
+            <number id="grassmax"
+                    type="spinbutton"
+                    arg="-grass-max %"
+                    _label="Grass threshold: "
+                    low="0"
+                    high="100"
+                    default="70" />
+            <number id="mtnmax"
+                    type="spinbutton"
+                    arg="-mtn-max %"
+                    _label="Mountain threshold: "
+                    low="0"
+                    high="100"
+                    default="85" />
+        </vgroup>
+        <vgroup>
             <number id="delay"
                     type="spinbutton"
                     arg="-delay %"

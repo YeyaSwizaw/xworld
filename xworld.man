@@ -9,7 +9,8 @@ XWorld is a simple program that generates random worlds using perlin noise, and
 renders them randomly pixel by pixel.
 
 Using command line options, you can customise the delay between each new world,
-the size of each step in the noise grid, and the colour of each colour.
+the size of each step in the noise grid, the noise thresholds for each terrain
+feature, and the colour of each feature.
 .SH OPTIONS
 .TP 8
 .B \-root
@@ -32,6 +33,22 @@ The colour value for bits of the map that would usually be mountains.
 .TP 8
 .B \-grass\-col \fIvalue\fP (Default: \fI#00FF00\fP)
 The colour value for bits of the map that would usually be grass.
+.TP 8
+.B \-water\-max \fIvalue\fP (Default: \fI\30\fP)
+The threshold noise value for water. Every pixel between 0 and this value
+is water. (All -max options get scaled to between -1 and 1).
+.TP 8
+.B \-sand\-max \fIvalue\fP (Default: \fI\35\fP)
+The threshold noise value for sand. Every pixel between the water threshold 
+and this value is sand.
+.TP 8
+.B \-grass\-max \fIvalue\fP (Default: \fI70\fP)
+The threshold noise value for grass. Every pixel between the sand threshold
+and this value is grass.
+.TP 8
+.B \-mtn\-max \fIvalue\fP (Default: \fI85\fP)
+The threshold noise value for mountains. Every pixel between the grass threshold
+and this value is mountains. Everything higher is mountain peak.
 .TP 8
 .B \-grid\-step \fIvalue\fP (Default: \fI0.0075\fP)
 A bigger value effectively zooms out the generated worlds. If the value is too
