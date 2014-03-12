@@ -18,20 +18,20 @@ Display on the root window instead of a newly created window.
 .B \-delay \fIvalue\fP (Default: \fI3000000\fP)
 The delay between each new world.
 .TP 8
-.B \-blue\-hex \fIvalue\fP (Default: "\fI#0000FF\fP")
-The colour value for bits of the map that would usually be blue.
+.B \-water\-col \fIvalue\fP (Default: \fI#0000FF\fP)
+The colour value for bits of the map that would usually be water.
 .TP 8
-.B \-yellow\-hex \fIvalue\fP (Default: "\fI#FFCC00\fP")
-The colour value for bits of the map that would usually be yellow.
+.B \-sand\-col \fIvalue\fP (Default: \fI#FFCC00\fP)
+The colour value for bits of the map that would usually be sand.
 .TP 8
-.B \-white\-hex \fIvalue\fP (Default: "\fI#EEEEEE\fP")
-The colour value for bits of the map that would usually be white.
+.B \-peak\-col \fIvalue\fP (Default: \fI#EEEEEE\fP)
+The colour value for bits of the map that would usually be mountain peaks.
 .TP 8
-.B \-grey\-hex \fIvalue\fP (Default: "\fI#AAAAAA\fP")
-The colour value for bits of the map that would usually be grey.
+.B \-mtn\-col \fIvalue\fP (Default: \fI#AAAAAA\fP)
+The colour value for bits of the map that would usually be mountains.
 .TP 8
-.B \-green\-hex \fIvalue\fP (Default: "\fI#00FF00\fP")
-The colour value for bits of the map that would usually be green.
+.B \-grass\-col \fIvalue\fP (Default: \fI#00FF00\fP)
+The colour value for bits of the map that would usually be grass.
 .TP 8
 .B \-grid\-step \fIvalue\fP (Default: \fI0.0075\fP)
 A bigger value effectively zooms out the generated worlds. If the value is too

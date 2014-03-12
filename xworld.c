@@ -43,7 +43,7 @@ typedef struct xworld_state {
     XWindowAttributes wa;
 
     GC g;
-    XColor blue, yellow, white, grey, green;
+    XColor water, sand, peak, mtn, grass;
 
     xworld_noise_param* np;
     xworld_coord* coords;
@@ -163,11 +163,11 @@ static const char *xworld_defaults[] = {
     "*ppl:          100",
     "*delay:        3000000",
     "*gridstep:     0.0075",
-    "*bluehex:      #0000FF",
-    "*yellowhex:    #FFCC00",
-    "*whitehex:     #EEEEEE",
-    "*greyhex:      #AAAAAA",
-    "*greenhex:     #00FF00",
+    "*watercol:     #0000FF",
+    "*sandcol:      #FFCC00",
+    "*peakcol:      #EEEEEE",
+    "*mtncol:       #AAAAAA",
+    "*grasscol:     #00FF00",
     0
 };
 
@@ -176,11 +176,11 @@ static XrmOptionDescRec xworld_options[] = {
     { "-pixels-per-loop",   ".ppl",         XrmoptionSepArg,    0 },
     { "-delay",             ".delay",       XrmoptionSepArg,    0 },
     { "-grid-step",         ".gridstep",    XrmoptionSepArg,    0 },
-    { "-blue-hex",          ".bluehex",     XrmoptionSepArg,    0 },
-    { "-yellow-hex",        ".yellowhex",   XrmoptionSepArg,    0 },
-    { "-white-hex",         ".whitehex",    XrmoptionSepArg,    0 },
-    { "-grey-hex",          ".greyhex",     XrmoptionSepArg,    0 },
-    { "-green-hex",         ".greenhex",    XrmoptionSepArg,    0 },
+    { "-water-col",         ".waterhex",    XrmoptionSepArg,    0 },
+    { "-sand-col",          ".sandhex",     XrmoptionSepArg,    0 },
+    { "-peak-col",          ".peakhex",     XrmoptionSepArg,    0 },
+    { "-mtn-col",           ".mtnhex",      XrmoptionSepArg,    0 },
+    { "-grass-col",         ".grasshex",    XrmoptionSepArg,    0 },
     { 0, 0, 0, 0 } 
 };
 
@@ -202,24 +202,24 @@ static void* xworld_init(Display* dpy, Window wnd) {
     st->g = XCreateGC(st->dpy, st->wnd, screen, NULL);
 
     XParseColor(st->dpy, cmap, 
-            get_string_resource(st->dpy, "bluehex", "String"), &(st->blue));
-    XAllocColor(st->dpy, cmap, &(st->blue));
+            get_string_resource(st->dpy, "watercol", "String"), &(st->water));
+    XAllocColor(st->dpy, cmap, &(st->water));
 
     XParseColor(st->dpy, cmap, 
-            get_string_resource(st->dpy, "yellowhex", "String"), &(st->yellow));
-    XAllocColor(st->dpy, cmap, &(st->yellow));
+            get_string_resource(st->dpy, "sandcol", "String"), &(st->sand));
+    XAllocColor(st->dpy, cmap, &(st->sand));
 
     XParseColor(st->dpy, cmap, 
-            get_string_resource(st->dpy, "whitehex", "String"), &(st->white));
-    XAllocColor(st->dpy, cmap, &(st->white));
+            get_string_resource(st->dpy, "peakcol", "String"), &(st->peak));
+    XAllocColor(st->dpy, cmap, &(st->peak));
 
     XParseColor(st->dpy, cmap, 
-            get_string_resource(st->dpy, "greyhex", "String"), &(st->grey));
-    XAllocColor(st->dpy, cmap, &(st->grey));
+            get_string_resource(st->dpy, "mtncol", "String"), &(st->mtn));
+    XAllocColor(st->dpy, cmap, &(st->mtn));
 
     XParseColor(st->dpy, cmap, 
-            get_string_resource(st->dpy, "greenhex", "String"), &(st->green));
-    XAllocColor(st->dpy, cmap, &(st->green));
+            get_string_resource(st->dpy, "grasscol", "String"), &(st->grass));
+    XAllocColor(st->dpy, cmap, &(st->grass));
 
     st->ppl = get_integer_resource(st->dpy, "ppl", "Integer");
     st->delay = get_integer_resource(st->dpy, "delay", "Integer");
@@ -261,15 +261,15 @@ static unsigned long xworld_draw(Display* dpy, Window wnd, void* state) {
         st->coord++;
 
         if(val < -0.4) {
-            XSetForeground(st->dpy, st->g, st->blue.pixel);
+            XSetForeground(st->dpy, st->g, st->water.pixel);
         } else if(val < -0.35) {
-            XSetForeground(st->dpy, st->g, st->yellow.pixel);
+            XSetForeground(st->dpy, st->g, st->sand.pixel);
         } else if(val < 0.5) {
-            XSetForeground(st->dpy, st->g, st->green.pixel);
-        } else if(val < 0.7) {
-            XSetForeground(st->dpy, st->g, st->grey.pixel);
+            XSetForeground(st->dpy, st->g, st->grass.pixel);
+        } else if(val < 0.8) {
+            XSetForeground(st->dpy, st->g, st->mtn.pixel);
         } else {
-            XSetForeground(st->dpy, st->g, st->white.pixel);
+            XSetForeground(st->dpy, st->g, st->peak.pixel);
         }
 
         XDrawPoint(st->dpy, st->wnd, st->g, c.x, c.y);
