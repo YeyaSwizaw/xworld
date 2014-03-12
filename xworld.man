@@ -1,0 +1,50 @@
+.TH XWorld 1
+.SH NAME
+xworld - Display randomly generated worlds.
+.SH SYNOPSIS
+.B xworld
+[\fIoptions\fP]
+.SH DESCRIPTION
+XWorld is a simple program that generates random worlds using perlin noise, and
+renders them randomly pixel by pixel.
+
+Using command line options, you can customise the delay between each new world,
+the size of each step in the noise grid, and the colour of each colour.
+.SH OPTIONS
+.TP 8
+.B \-root
+Display on the root window instead of a newly created window.
+.TP 8
+.B \-delay \fIvalue\fP (Default: \fI3000000\fP)
+The delay between each new world.
+.TP 8
+.B \-blue\-hex \fIvalue\fP (Default: "\fI#0000FF\fP")
+The colour value for bits of the map that would usually be blue.
+.TP 8
+.B \-yellow\-hex \fIvalue\fP (Default: "\fI#FFCC00\fP")
+The colour value for bits of the map that would usually be yellow.
+.TP 8
+.B \-white\-hex \fIvalue\fP (Default: "\fI#EEEEEE\fP")
+The colour value for bits of the map that would usually be white.
+.TP 8
+.B \-grey\-hex \fIvalue\fP (Default: "\fI#AAAAAA\fP")
+The colour value for bits of the map that would usually be grey.
+.TP 8
+.B \-green\-hex \fIvalue\fP (Default: "\fI#00FF00\fP")
+The colour value for bits of the map that would usually be green.
+.TP 8
+.B \-grid\-step \fIvalue\fP (Default: \fI0.0075\fP)
+A bigger value effectively zooms out the generated worlds. If the value is too
+high (i.e. >1) then you will just get useless random noise.
+.TP 8
+.B \-pixels-per-loop \fIvalue\fP (Default: \fI100\fP)
+The number of pixels to render at each iteration. A higher value will result
+in a faster transition between worlds, but will increase the time spent in
+the draw function.
+.SH SEE ALSO
+.BR X (1),
+.BR xscreensaver (1)
+.SH COPYRIGHT
+Copyright \(co 2014 by Samuel Sleight
+.SH AUTHOR
+Samuel Sleight <samuel.sleight@gmail.com>, March 2014
